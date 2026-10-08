@@ -21,6 +21,14 @@ sonus/
 └── README.md
 ```
 
+## Development Workflow
+
+- `main` is the stable branch.
+- Create separate branches for new features and bug fixes.
+- Use descriptive branch names such as `feature/chord-detection`.
+- Submit pull requests before merging changes into `main`.
+
+
 ## Project Status
 
 Currently in early development.
