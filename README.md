@@ -28,16 +28,64 @@ sonus/
 - Use descriptive branch names such as `feature/chord-detection`.
 - Submit pull requests before merging changes into `main`.
 
-## Google Colab Setup
+## Getting Started
 
-1. Open notebooks/sonus_setup/ipynb from the GitHub repository.
-2. Click Open in Colab if available, or download the notebook and upload it to Google Colab.
-3. Select Runtime -> Run all
-4. The notebook will clone the Sonus repository, install the dependencies from requirements.txt, and verify that the environment is configured correctly.
-   
-- **Note:** Google Colab environments are temporary. Dependencies may need to be reinstalled when starting a new session.
+### Prerequisites
+- Python 3
+- Git
+- pip
 
-  
+### Local Setup
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/Dabgaryan1/sonus.git
+cd sonus
+```
+
+2. Create a virtual environment:
+
+```bash
+python -m venv backend/.venv
+```
+
+3. Activate the virtual environment:
+
+**Windows (PowerShell):**
+```powershell
+.\backend\.venv\Scripts\Activate.ps1
+```
+
+**macOS/Linux:**
+```bash
+source backend/.venv/bin/activate
+```
+
+4. Install dependencies:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+5. Start the FastAPI server:
+
+```bash
+fastapi dev backend/main.py
+```
+
+6. Open `http://127.0.0.1:8000/docs` to view the API documentation.
+
+### Google Colab Setup
+
+1. Open [Google Colab](https://colab.research.google.com/).
+2. Open `notebooks/sonus_setup.ipynb` from the Sonus GitHub repository.
+3. Select **Runtime → Run all**.
+4. The notebook will clone the repository, install the required Python dependencies, and verify the environment.
+
+**Note:** Google Colab environments are temporary, so setup may need to be repeated when starting a new session.
+
+
 ## Project Status
 
 Currently in early development.
