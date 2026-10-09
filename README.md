@@ -28,7 +28,7 @@ sonus/
 - Use descriptive branch names such as `feature/chord-detection`.
 - Submit pull requests before merging changes into `main`.
 
-##Google Colab Setup
+## Google Colab Setup
 
 1. Open notebooks/sonus_setup/ipynb from the GitHub repository.
 2. Click Open in Colab if available, or download the notebook and upload it to Google Colab.
