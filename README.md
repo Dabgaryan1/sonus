@@ -88,4 +88,4 @@ fastapi dev backend/main.py
 
 ## Project Status
 
-Currently in early development.
+Currently in planning and early development.
