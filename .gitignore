@@ -6,5 +6,5 @@ __pycache__/
 .ipynb_checkpoints/
 node_modules/
 dist/
-.venv/
 backend/generated/
+notebooks/data/
