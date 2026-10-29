@@ -25,14 +25,17 @@ def test_uniqueness():
 
 def test_parser_cases():
     cases = [
-        ("C:maj", "C:maj"),
-        ("Db:min(9)/5", "C#:min"),
-        ("N", "<NC>"),
-        ("A:7", "A:7"),
-        ("C:maj9", "C:maj7"),
-        ("C:9", "C:7"),
-        ("C:5", "<DROP>"),
-        ("garbage", None),
+        ("C", "C:maj"),            # bare letter = major
+        ("Amin", "A:min"),         # plain minor
+        ("E7", "E:7"),             # dominant 7th
+        ("Fsmin", "F#:min"),       # sharp root (s) + quality
+        ("Csus4", "C:sus4"),       # ambiguity: "Cs" must NOT be read as C#
+        ("Cadd9", "C:maj"),        # extended chord collapsed via Section 3 table
+        ("C5", "<DROP>"),          # power chord, no definable triad quality
+        ("N", "<NC>"),             # no chord
+        ("<verse_1>", "<TAG>"),    # song-structure tag, not a chord
+        ("D/Fs", "D:maj"),         # bass note dropped
+        ("garbage", None),         # unrecognized
     ]
     for raw, expected in cases:
         result = parse_chord(raw)
@@ -42,18 +45,19 @@ def test_parser_cases():
 
 def test_encode_decode_round_trip():
     chord_to_id, id_to_chord = load_vocab()
-    assert encode_chord("C:maj", chord_to_id) == chord_to_id["C:maj"]
+    assert encode_chord("C", chord_to_id) == chord_to_id["C:maj"]
     assert encode_chord("N", chord_to_id) == chord_to_id["<NC>"]
     assert encode_chord("garbage", chord_to_id) == chord_to_id["<UNK>"]
-    assert encode_chord("C:5", chord_to_id) is None
+    assert encode_chord("C5", chord_to_id) is None
+    assert encode_chord("<verse_1>", chord_to_id) is None
     assert decode_chord(chord_to_id["A:min7"], id_to_chord) == "A:min7"
     print("encode/decode OK")
 
 
 def test_encode_progression():
     chord_to_id, _ = load_vocab()
-    ids = encode_progression(["C:maj", "A:min", "C:5", "F:maj"], max_len=5, chord_to_id=chord_to_id)
-    assert len(ids) == 3 + 2  # C:maj, A:min, F:maj kept; C:5 dropped; padded to 5
+    ids = encode_progression(["C", "Amin", "C5", "F"], max_len=5, chord_to_id=chord_to_id)
+    assert len(ids) == 3 + 2  # C, Amin, F kept; C5 dropped; padded to 5
     assert ids[-1] == chord_to_id["<PAD>"]
     print("encode_progression OK")
 
@@ -82,8 +86,11 @@ def test_dataset_coverage():
         reader = csv.DictReader(f)
         for row in reader:
             for raw_label in row[CHORD_COLUMN].split():
+                parsed = parse_chord(raw_label)
+                if parsed == "<TAG>":
+                    continue  # song-structure tag, not a chord - don't count
                 total += 1
-                if parse_chord(raw_label) is None:
+                if parsed is None:
                     unknown += 1
 
     rate = (unknown / total * 100) if total else 0

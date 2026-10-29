@@ -3,7 +3,7 @@ from chord_parser import parse_chord
 
 def encode_chord(raw_label, chord_to_id):
     parsed = parse_chord(raw_label)
-    if parsed == "<DROP>":
+    if parsed in ("<DROP>", "<TAG>"):
         return None
     if parsed is None:
         return chord_to_id["<UNK>"]
