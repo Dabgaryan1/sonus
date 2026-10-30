@@ -28,6 +28,11 @@ QUALITY_COLLAPSE = {
     "augmaj7": "aug",
     "7b9": "7",
     "dim13b9": "dim7",
+    "majs9": "maj7", "maj911s": "maj7", "majs911s": "maj7",
+    "13b": "7", "13b9": "7",
+    "augmaj9": "aug",
+    "minmaj9": "min7",
+    "dim9": "dim7", "dimb7": "dim7",
 }
 
 # no definable triad quality (no 3rd) - excluded from training data, not <UNK>
