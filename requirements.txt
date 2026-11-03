@@ -1,4 +1,8 @@
-fastapi[standard]
-datasets
-pandas
-numpy
+fastapi[standard]==0.143.3
+datasets==2.14.7
+pandas==3.1.0
+numpy==2.4.6
+transformers==4.29.2
+huggingface-hub==0.36.2
+mido==1.2.10
+midi2audio==0.1.1

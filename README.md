@@ -131,19 +131,18 @@ Any redistributed Stanford code or model components must retain applicable licen
 
 **In active development.**
 
-### December 2026 Milestone
+### Completed
+- Established the GitHub repository and initial project structure.
+- Configured a Python 3.11 development environment.
+- Implemented and successfully tested the N-gram baseline model using the Chordonomicon dataset.
+- Configured the dependencies required for Stanford's Anticipatory Music Transformer.
+- Researched open-source LLMs for explaining musical recommendations.
 
+### In Progress
+- Integration of Stanford's Anticipatory Music Transformer into Sonus.
+
+### December 2026 Milestone
 Develop a functional prototype capable of generating music and accompaniment using pretrained AI models.
 
 ### Spring 2027 Milestone
-
 Extend Sonus to support live musical collaboration, with the goal of demonstrating AI-generated music alongside human musicians.
-
-## Future Development
-
-- Music generation controls and customization
-- Melody-conditioned accompaniment
-- MIDI file input and export
-- Real-time MIDI input processing
-- Tempo synchronization
-- Low-latency music generation for live performance
