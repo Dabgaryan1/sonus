@@ -7,7 +7,6 @@ from dataset_split import load_dataset_csv, split_songs, DATASET_CSV
 
 
 def parse_raw_chords_to_ids(raw_str, chord_to_id):
-    """Parses a space-separated string of raw chords into valid encoded IDs."""
     raw_labels = raw_str.split()
     encoded = []
     for label in raw_labels:
@@ -18,7 +17,6 @@ def parse_raw_chords_to_ids(raw_str, chord_to_id):
 
 
 def load_dataset_sequences(csv_path, chord_to_id, chord_col="chords"):
-    """Loads sequences from dataset CSV using chord encoding."""
     sequences = []
     with open(csv_path, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
@@ -36,11 +34,11 @@ class MarkovBaseline:
         self.transition_probs = {}
 
     def fit(self, train_sequences):
-        """Alias for train to support the test suite."""
+        #Alias for train to support the test suite.
         self.train(train_sequences)
 
     def train(self, train_sequences):
-        """Trains an N-gram transition model on encoded sequences."""
+        #Trains an N-gram transition model on encoded sequences
         transition_counts = defaultdict(lambda: defaultdict(int))
         
         for seq in train_sequences:
@@ -57,7 +55,7 @@ class MarkovBaseline:
             }
 
     def predict_next_chord_ids(self, context, top_k=3):
-        """Predicts top-k next chord IDs given a context tuple/list, excluding special tokens."""
+        #Predicts top-k next chord IDs given a context tuple/list, excluding special tokens.
         special_ids = {0, 1, 2}
         ctx_tuple = tuple(context)
         
@@ -73,28 +71,30 @@ class MarkovBaseline:
         return [chord_id for chord_id, prob in sorted_preds[:top_k]]
 
     def predict_next_chords(self, context, id_to_chord, top_k=3):
-        """Predicts top-k chord string names given a context."""
+        #Predicts top-k chord string names given a context.
         chord_ids = self.predict_next_chord_ids(context, top_k=top_k)
         return [id_to_chord[cid] for cid in chord_ids]
 
     def predict(self, context, top_k=3):
         return self.predict_next_chord_ids(context, top_k=top_k)
 
-    def evaluate(self, test_sequences, top_k=3, sample_size=2000):
+    def evaluate(self, test_sequences, top_k=3, sample_size=None):
         return evaluate_baseline(self, test_sequences, top_k=top_k, sample_size=sample_size)
 
 
-def evaluate_baseline(model, test_sequences, top_k=3, sample_size=2000):
-    """Evaluates the baseline model and returns dictionary metrics."""
+def evaluate_baseline(model, test_sequences, top_k=3, sample_size=None):
+    #Evaluates the baseline model on test sequences 
     top_1_correct = 0
     top_k_correct = 0
     total_predictions = 0
     
-    if len(test_sequences) > sample_size:
+    if sample_size is not None and len(test_sequences) > sample_size:
         eval_data = random.sample(test_sequences, sample_size)
     else:
         eval_data = test_sequences
         
+    print(f"Evaluating on {len(eval_data)} test sequences...")
+    
     for seq in eval_data:
         for i in range(len(seq) - (model.n - 1)):
             context = tuple(seq[i:i + (model.n - 1)])
@@ -140,7 +140,6 @@ def main():
     print(f"Train songs: {len(train_df)}, Test songs: {len(test_df)}")
 
     print("Loading and encoding training sequences...")
-    # Use load_dataset_sequences for clean loading
     train_csv = DATASET_CSV.parent / "train.csv"
     test_csv = DATASET_CSV.parent / "test.csv"
     
@@ -156,9 +155,10 @@ def main():
     baseline.fit(train_sequences)
     print("Training complete.")
 
-    print("Loading test sequences and evaluating...")
+    print("Loading test sequences and evaluating on all test data...")
     test_sequences = load_dataset_sequences(test_csv, chord_to_id)
-    results = evaluate_baseline(baseline, test_sequences, top_k=3, sample_size=2000)
+    
+    results = evaluate_baseline(baseline, test_sequences, top_k=3, sample_size=None)
 
     print("\nEvaluation Results")
     print(f"Total Evaluations: {results['total_evaluations']}")
