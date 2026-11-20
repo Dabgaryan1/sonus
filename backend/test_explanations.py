@@ -4,9 +4,9 @@ from explanations import generate_explanations
 progression = ["C", "Am", "F"]
 
 recommendations = [
-    {"chord": "G", "probability": 0.52},
-    {"chord": "Am", "probability": 0.28},
-    {"chord": "F", "probability": 0.15}
+    {"chord": "G", "probability": 0.65},
+    {"chord": "C", "probability": 0.15},
+    {"chord": "G7", "probability": 0.08}
 ]
 
 result = generate_explanations(progression, recommendations)

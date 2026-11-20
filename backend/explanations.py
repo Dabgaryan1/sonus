@@ -8,7 +8,22 @@ def generate_explanations(progression, recommendations):
     Recommended next chords: {recommendations}
 
     Explain why each recommended chord might fit after the current progression.
+
+    HARMONIC ACCURACY RULES:
+        - Only describe harmonic relationships that can be
+        supported by the provided chord progression.
+        - Do not claim a chord creates a resolution, cadence,
+        modulation, or tonic-dominant relationship unless
+        the provided progression clearly supports it.
+        - Do not assume a key unless it is explicitly provided.
+        - Do not invent musical context, genres, or intentions.
+        - If a harmonic function is uncertain, explain a
+        simpler, verifiable relationship instead, such as
+        shared notes or chord repetition.
+        - Never invent a relationship just to provide an
+        explanation.
     """
+    
 
     response = chat(
         model="qwen3:1.7b",
