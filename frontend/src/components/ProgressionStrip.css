@@ -1,0 +1,92 @@
+.prog {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.prog-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.prog-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  height: 34px;
+  padding: 0 12px;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--panel-2);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.chip.is-context {
+  border-color: var(--line-strong);
+  background: var(--panel-3);
+  color: var(--text);
+}
+
+.chip-more {
+  border-style: dashed;
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.chip-next {
+  margin-left: 10px;
+  position: relative;
+  border: 1.5px dashed var(--accent);
+  background: transparent;
+  color: var(--accent);
+}
+
+.chip-next::before {
+  content: "→";
+  position: absolute;
+  left: -15px;
+  color: var(--faint);
+  font-weight: 400;
+}
+
+.chip-next.is-filled {
+  background: var(--accent-wash);
+}
+
+.chip-skeleton {
+  width: 52px;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.prog-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.ctx-swatch {
+  flex: none;
+  width: 14px;
+  height: 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 3px;
+  background: var(--panel-3);
+}

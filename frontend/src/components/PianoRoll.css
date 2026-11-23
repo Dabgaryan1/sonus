@@ -1,0 +1,167 @@
+.roll {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--roll-bg);
+  overflow: hidden;
+}
+
+.roll-body {
+  display: flex;
+}
+
+.roll-keys {
+  flex: none;
+  border-right: 1px solid var(--line);
+  background: var(--roll-bg);
+}
+
+.roll-scroll {
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.roll-scroll svg {
+  display: block;
+}
+
+.roll-lane-title {
+  font-size: 10px;
+  font-weight: 500;
+  fill: var(--faint);
+}
+
+.key-white {
+  fill: var(--key-white);
+}
+
+.key-black {
+  fill: var(--key-black);
+}
+
+.key-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  fill: var(--key-label);
+}
+
+.row-white {
+  fill: var(--roll-row);
+}
+
+.row-black {
+  fill: var(--roll-row-alt);
+}
+
+.hatch-line {
+  stroke: var(--roll-hatch);
+  stroke-width: 1;
+}
+
+.grid-beat {
+  stroke: var(--roll-grid);
+  stroke-width: 1;
+}
+
+.grid-bar {
+  stroke: var(--roll-grid-strong);
+  stroke-width: 1;
+}
+
+.ruler-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--muted);
+}
+
+.lane-chord {
+  fill: var(--panel-3);
+  stroke: var(--line-strong);
+}
+
+.lane-chord-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  fill: var(--text);
+}
+
+.lane-ghost {
+  fill: var(--accent-wash);
+  stroke: var(--accent);
+  stroke-dasharray: 4 3;
+}
+
+.lane-ghost-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  fill: var(--accent);
+}
+
+.lane-loading rect {
+  fill: var(--panel-2);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.lane-loading text {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--muted);
+}
+
+.note {
+  fill: var(--accent);
+}
+
+.note-ghost {
+  fill: var(--accent-wash);
+  stroke: var(--accent);
+  stroke-width: 1.2;
+  stroke-dasharray: 4 3;
+}
+
+.end-marker {
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+
+.end-label {
+  font-size: 11px;
+  font-weight: 500;
+  fill: var(--accent);
+}
+
+.roll-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 9px 12px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.roll-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.swatch {
+  display: inline-block;
+  width: 14px;
+  height: 8px;
+  border-radius: 2px;
+}
+
+.swatch-note {
+  background: var(--accent);
+}
+
+.swatch-ghost {
+  background: var(--accent-wash);
+  border: 1px dashed var(--accent);
+}
