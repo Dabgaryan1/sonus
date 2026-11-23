@@ -13,7 +13,7 @@ export function Suggestions({ state }) {
     case "loading":
       return (
         <div className="sugg" aria-busy="true">
-          <p className="sugg-status">Reading chords and asking the model…</p>
+          <p className="sugg-status">Reading chords and finding what fits next…</p>
           {[0, 1, 2].map((i) => (
             <div key={i} className="sugg-card sugg-skeleton" />
           ))}
@@ -64,7 +64,7 @@ export function Suggestions({ state }) {
             })}
           </div>
           <p className="sugg-foot">
-            Select a suggestion to preview it on the piano roll. Percentages show how confident the model is, not how
+            Select a suggestion to preview it on the piano roll. Percentages show how confident Sonus is, not how
             "correct" a chord is in music theory.
           </p>
         </div>
@@ -77,9 +77,9 @@ export function Suggestions({ state }) {
 
 function HowItWorks() {
   const steps = [
-    ["Upload", "Drop in a MIDI file of a chord progression or a short piece."],
+    ["Import", "Drop in a MIDI file of a chord progression or a short piece."],
     ["Analyze", "Sonus figures out which chords you played, bar by bar."],
-    ["Learn", "A model trained on thousands of songs suggests what could come next, and explains why."],
+    ["Suggest", "Sonus suggests what could come next, and explains why it fits."],
   ];
   return (
     <div className="sugg">

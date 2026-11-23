@@ -27,7 +27,8 @@ export function FileCard({ midi, onReplace, onRemove }) {
           <p className="filecard-meta">
             {formatBytes(midi.sizeBytes)} · {midi.trackCount} {midi.trackCount === 1 ? "track" : "tracks"} ·{" "}
             {midi.noteCount} notes
-            {midi.drumTracksIgnored > 0 && ` · ${midi.drumTracksIgnored} drum track ignored`}
+            {midi.drumTracksIgnored > 0 &&
+              ` · ${midi.drumTracksIgnored} drum ${midi.drumTracksIgnored === 1 ? "track" : "tracks"} ignored`}
           </p>
         </div>
         <div className="filecard-actions">

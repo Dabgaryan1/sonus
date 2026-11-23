@@ -17,7 +17,6 @@ export function Header({ step, onNewSession, canReset }) {
         </span>
         <span className="brand-text">
           <span className="brand-name">Sonus</span>
-          <span className="brand-tag">Next-chord suggestions, explained.</span>
         </span>
       </button>
 

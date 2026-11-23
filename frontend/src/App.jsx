@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { analyzeMidi, USE_MOCK } from "./api/client";
+import { analyzeMidi } from "./api/client";
 import { Dropzone } from "./components/Dropzone";
 import { FileCard } from "./components/FileCard";
 import { Header } from "./components/Header";
@@ -141,7 +141,7 @@ export default function App() {
         </section>
       </main>
 
-      <StatusBar message={status.message} tone={status.tone} mock={USE_MOCK} />
+      <StatusBar message={status.message} tone={status.tone} />
     </div>
   );
 }
@@ -169,6 +169,6 @@ function statusFor(phase, midi, analysis, error) {
     case "error":
       return { message: midi ? "Analysis failed" : (error ?? "Couldn't read file"), tone: "error" };
     default:
-      return { message: "Waiting for a MIDI file", tone: "idle" };
+      return { message: "", tone: "idle" };
   }
 }

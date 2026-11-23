@@ -14,6 +14,10 @@ export function Dropzone({ onFile, busy, error }) {
 
   async function loadSample() {
     const res = await fetch(SAMPLE_URL);
+    if (!res.ok) {
+      onFile(new File([], "am-f-c-g.mid", { type: "audio/midi" }));
+      return;
+    }
     const blob = await res.blob();
     onFile(new File([blob], "am-f-c-g.mid", { type: "audio/midi" }));
   }

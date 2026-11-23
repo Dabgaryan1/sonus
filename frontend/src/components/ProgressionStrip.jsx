@@ -47,7 +47,7 @@ export function ProgressionStrip({ progression, suggestion, analyzing, keyName }
 
       <p className="prog-note">
         <i className="ctx-swatch" aria-hidden="true" />
-        Outlined chords are the last {MODEL_CONTEXT_LENGTH} the model uses to predict what comes next.
+        Outlined chords are the last {MODEL_CONTEXT_LENGTH} Sonus considers for its next suggestion.
       </p>
     </section>
   );
