@@ -1,53 +1,12 @@
 import torch
 import torch.nn as nn
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import DataLoader
+from sliding_window import ChordWindowDataset
 from pathlib import Path
 import random
-
 from chord_vocab import load_vocab
 from dataset_split import load_dataset_csv, split_songs
 from baseline import load_dataset_sequences, DATASET_CSV
-
-
-class ChordWindowDataset(Dataset):
-    """
-    PyTorch dataset for next-chord prediction using sliding windows.
-    Accepts encoded song sequences and generates fixed-length input/target pairs.
-    """
-    def __init__(self, sequences, context_length=3):
-        if context_length < 1:
-            raise ValueError("context_length must be at least 1")
-
-        self.sequences = sequences
-        self.context_length = context_length
-        self.window_indices = []
-
-        for song_idx, sequence in enumerate(sequences):
-            for start in range(len(sequence) - context_length):
-                context = sequence[start:start + context_length]
-                target = sequence[start + context_length]
-
-                # Skip padding or special tokens in context/targets
-                if 0 in context or target in (0, 1, 2):
-                    continue
-
-                self.window_indices.append((song_idx, start))
-
-    def __len__(self):
-        return len(self.window_indices)
-
-    def __getitem__(self, idx):
-        song_idx, start = self.window_indices[idx]
-        sequence = self.sequences[song_idx]
-
-        context = sequence[start:start + self.context_length]
-        target = sequence[start + self.context_length]
-
-        return (
-            torch.tensor(context, dtype=torch.long),
-            torch.tensor(target, dtype=torch.long)
-        )
-
 
 class ChordLSTM(nn.Module):
     def __init__(self, vocab_size=135, embedding_dim=64, hidden_dim=128, num_layers=2, dropout=0.2):
