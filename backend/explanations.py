@@ -1,52 +1,79 @@
 from ollama import chat
+from template_explanations import generate_template_explanation
 
 
 def generate_explanations(progression, recommendations):
 
-    prompt = f"""
-    Current chord progression: {progression}
-    Recommended next chords: {recommendations}
+    explanations = []
+    previousChord = progression[-1]
 
-    Explain why each recommended chord might fit after the current progression.
+    for predictedChord in recommendations:
 
-    HARMONIC ACCURACY RULES:
-        - Only describe harmonic relationships that can be
-        supported by the provided chord progression.
-        - Do not claim a chord creates a resolution, cadence,
-        modulation, or tonic-dominant relationship unless
-        the provided progression clearly supports it.
-        - Do not assume a key unless it is explicitly provided.
-        - Do not invent musical context, genres, or intentions.
-        - If a harmonic function is uncertain, explain a
-        simpler, verifiable relationship instead, such as
-        shared notes or chord repetition.
-        - Never invent a relationship just to provide an
-        explanation.
-    """
-    
+        # Generate the rule-based explanation
+        templateExplanation = generate_template_explanation(
+            previousChord, predictedChord
+        )
 
-    response = chat(
-        model="qwen3:1.7b",
-        messages=[
-            {
-                "role": "system",
-                "content": (
-                    "Your job is to examine a given chord sequence and three recommended chords to follow that sequence. "
-                    "Explain why each chord was recommended concisely. "
-                    "Do not invent music theory facts. "
-                    "Only use known, established music theory facts. "
-                    "Do not treat prediction probabilities as measures of music theory correctness. "
-                    "Do not try to recommend new chords. "
-                    "Only give 1-2 sentence explanations for each chord."
-                )
-            },
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ],
-        think=False
-    )
+        prompt = f"""
+        Current chord progression: {progression}
+        Recommended next chord: {predictedChord}
+        Rule-based explanation: {templateExplanation}
 
-    explanation = response.message.content
-    return explanation
+        Suggest how the musician might creatively use this
+        recommendation to explore a particular mood or atmosphere.
+        Do not explain why the chord works.
+        """
+
+        response = chat(
+            model="qwen3:1.7b",
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a creative songwriting assistant. "
+                        "Your only job is to suggest subjective artistic possibilities "
+                        "to the musician. "
+                        "The provided rule-based explanation is complete and does not "
+                        "require any additional analysis. "
+                        "Do not explain why the chord works. "
+                        "Do not analyze the chord progression. "
+                        "Do not mention notes, keys, scales, intervals, chord relationships, "
+                        "harmonic functions, tension, resolution, or voice leading. "
+                        "Do not repeat information from the rule-based explanation. "
+                        "Focus exclusively on potential moods, emotions, and atmosphere. "
+                        "Address the musician directly using words like 'you' and 'your'. "
+                        "Frame all suggestions as creative possibilities, not guarantees. "
+                        "Begin with phrases such as 'Try this if', 'You might enjoy', "
+                        "or 'Consider this if'. "
+                        "Do not recommend new chords. "
+                        "Return only one sentence of no more than 25 words."
+                        "Do not justify your creative suggestions using musical relationships. "
+                        "Do not explain why a suggested mood might occur. "
+                        "Only suggest what the musician could creatively explore. "
+
+                        "Example of an acceptable response: "
+                        "'Try this if you want to explore a nostalgic or reflective atmosphere.' "
+
+                        "Example of an unacceptable response: "
+                        "'Try this because the shared notes create a nostalgic atmosphere.' "
+
+                        "Do not include a musical justification for your suggestion. "
+                        "Return only one sentence of no more than 20 words. "
+                    )
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            think=False
+        )
+
+        creativeExplanation = response.message.content.strip()
+
+        # Combine the template and LLM explanations
+        explanation = f"{templateExplanation} {creativeExplanation}"
+
+        explanations.append(explanation)
+
+    return explanations
