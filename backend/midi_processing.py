@@ -1,39 +1,150 @@
 import pretty_midi
 
-#im not sure how files will be uploaded, 
-#but if google colab is used keep this
-#if not delete and change to needed thing
-from google.colab import files
-upladed = files.upload()
 
-#Grab the filename of the uploaded file
-midi_path = list(uploaded.keys())[0]
+def extract_midi_notes(midi_path):
+    """
+    Extract note information from a MIDI file.
 
-#load MIDI file into PretyMIDI object
-midi_data = pretty_midi.PrettyMIDI(midi_path)
+    Returns a list of dictionaries containing:
+    - pitch: MIDI note number
+    - start: note start time in seconds
+    - end: note end time in seconds
+    - instrument: instrument index
+    """
+    midi_data = pretty_midi.PrettyMIDI(str(midi_path))
+    notes = []
 
-#variables 
-chords = []
-current_chord = []
-sec = 0.05
+    for instrument_index, instrument in enumerate(midi_data.instruments):
+        if instrument.is_drum:
+            continue
 
-#parsing through the file
-for instrument in midi_data.instruments:
-    for note in instrument.notes:
-        #check if the note is already in the current chord
-        if note.pitch not in current_chord:
-            current_chord.append(note.pitch)
-        
-        #check if the note is still being played
-        if note.end > sec:
-            sec += 0.05
+        for note in instrument.notes:
+            notes.append({
+                "pitch": note.pitch,
+                "start": note.start,
+                "end": note.end,
+                "instrument": instrument_index
+            })
+
+    notes.sort(key=lambda note: (note["start"], note["pitch"]))
+
+    return notes
+
+
+def group_notes_by_time(notes, tolerance=0.05):
+    """
+    Group notes that start within a small time tolerance.
+
+    Returns groups containing pitches and timing information.
+    This is intended for simple, block-chord MIDI files.
+    """
+    if tolerance < 0:
+        raise ValueError("tolerance must be non-negative")
+
+    if not notes:
+        return []
+
+    sorted_notes = sorted(
+        notes,
+        key=lambda note: (note["start"], note["pitch"])
+    )
+
+    groups = []
+    current_group = []
+    group_start = None
+
+    for note in sorted_notes:
+        if not current_group:
+            current_group = [note]
+            group_start = note["start"]
+        elif note["start"] - group_start <= tolerance:
+            current_group.append(note)
         else:
-            #if the note has ended, add the current chord to the list of chords and reset the current chord
-            chords.append(current_chord)
-            current_chord = []
-            sec += 0.05
-        
-        #turn notes in chord [] into chord names
-        for chord in chords:
-            names = [pretty_midi.note_number_to_name(n.pitch) for n in chord]
-            
+            groups.append({
+                "pitches": sorted(set(n["pitch"] for n in current_group)),
+                "start": float(min(n["start"] for n in current_group)),
+                "end": float(max(n["end"] for n in current_group))
+            })
+
+            current_group = [note]
+            group_start = note["start"]
+
+    if current_group:
+        groups.append({
+            "pitches": sorted(set(n["pitch"] for n in current_group)),
+            "start": float(min(n["start"] for n in current_group)),
+            "end": float(max(n["end"] for n in current_group))
+        })
+
+    return groups
+
+
+def identify_chord(pitches):
+    """
+    Identify a major or minor triad from MIDI pitches.
+
+    Returns a raw chord label compatible with
+    Hanna's chord encoder, or None if unidentified.
+    """
+    if not pitches:
+        return None
+
+    # Convert MIDI pitches to unique pitch classes (0-11).
+    pitch_classes = {pitch % 12 for pitch in pitches}
+
+    if len(pitch_classes) != 3:
+        return None
+
+    note_names = [
+        "C", "C#", "D", "D#", "E", "F",
+        "F#", "G", "G#", "A", "A#", "B"
+    ]
+
+    for root in range(12):
+        major = {
+            root,
+            (root + 4) % 12,
+            (root + 7) % 12
+        }
+
+        minor = {
+            root,
+            (root + 3) % 12,
+            (root + 7) % 12
+        }
+
+        if pitch_classes == major:
+            return note_names[root]
+
+        if pitch_classes == minor:
+            return note_names[root] + "min"
+
+    return None
+
+
+def extract_chord_progression(midi_path, tolerance=0.05):
+    """
+    Extract a chord progression from a MIDI file.
+
+    Returns raw chord labels compatible with Hanna's
+    encoder, along with start/end times.
+    """
+    notes = extract_midi_notes(midi_path)
+    groups = group_notes_by_time(notes, tolerance=tolerance)
+
+    progression = []
+
+    for group in groups:
+        chord = identify_chord(group["pitches"])
+
+        # Skip note groups that cannot be identified.
+        if chord is None:
+            continue
+
+        progression.append({
+            "chord": chord,
+            "start": group["start"],
+            "end": group["end"]
+        })
+
+    return progression
