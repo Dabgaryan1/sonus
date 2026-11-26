@@ -29,8 +29,6 @@ def generate_windows(sequence, context_length=3):
 
         yield context, target
 
-        import torch
-from torch.utils.data import Dataset
 
 
 class ChordWindowDataset(Dataset):
